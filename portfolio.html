@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purushotham - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff4040, #ff69b4, #6b48ff, #00ddeb);
+            background-attachment: fixed;
+            color: #333;
+            line-height: 1.6;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        body.light-mode {
+            background: linear-gradient(135deg, #ffe4e1, #ffb6c1, #e6e6fa, #e0ffff);
+            color: #222;
+        }
+
+        .navbar {
+            background: rgba(26, 26, 46, 0.9);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .navbar.light-mode {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .navbar.light-mode a {
+            color: #333;
+        }
+
+        .navbar a:hover {
+            color: #ff69b4;
+            transform: scale(1.1);
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: #ff4040;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: background 0.3s;
+        }
+
+        .mode-toggle:hover {
+            background: #ff69b4;
+        }
+
+        .mode-toggle.light-mode {
+            background: #333;
+            color: #fff;
+        }
+
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            scroll-margin-top: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .section.light-mode h2 {
+            color: #333;
+            text-shadow: none;
+        }
+
+        .about, .contact {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .about.light-mode, .contact.light-mode {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .about p, .contact p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+        }
+
+        .projects-grid, .internships-grid, .certifications-grid, .skills-grid, .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s, scale 0.3s;
+        }
+
+        .card.light-mode {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+        }
+
+        .card.light-mode h3 {
+            color: #222;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .card.light-mode p {
+            color: #444;
+        }
+
+        .card a {
+            color: #ff69b4;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        .contact a {
+            color: #ff69b4;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        .contact a:hover {
+            text-decoration: underline;
+        }
+
+        .cv-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: #1a1a2e;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .cv-link.light-mode {
+            background: #ff4040;
+        }
+
+        .cv-link:hover {
+            background: #ff69b4;
+            transform: scale(1.05);
+        }
+
+        .welcome-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        .welcome-popup.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-message {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(1);
+            transition: transform 0.5s;
+        }
+
+        .welcome-message h1 {
+            font-size: 2rem;
+            color: #ff4040;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-message p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .navbar ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .projects-grid, .internships-grid, .certifications-grid, .skills-grid, .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .welcome-message h1 {
+                font-size: 1.5rem;
+            }
+
+            .welcome-message p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" onclick="toggleMode()">Light Mode</button>
+
+    <div class="welcome-popup" id="welcomePopup">
+        <div class="welcome-message">
+            <h1>Welcome to My Portfolio</h1>
+            <p>Explore my projects, skills, and achievements!</p>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#internships">Internships</a></li>
+            <li><a href="#certifications">Certifications</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="about" class="section about">
+        <h2>About Me</h2>
+        <img src="https://drive.google.com/thumbnail?id=1kDuA-oB2i1uNIo7-m9IBfB6bqikmqWH6" alt="Purushotham's Profile Photo" class="profile-photo">
+        <p>I am Purushotham, an aspiring Electronics and Communication Engineering (ECE) student at Vishnu Institute of Technology, with a deep interest in VLSI, Embedded Systems, IoT, Digital Design, and emerging technologies like Space Tech and AI. I have consistently maintained a strong academic record with a 9.8 CGPA and have actively participated in technical events, internships, and real-time projects.</p>
+        <p>My passion lies in building innovative solutions that are not only technically sound but also meaningful to society. I believe in continuous learning and have pursued multiple online courses, hands-on internships, and competitions that helped shape my technical and creative mindset.</p>
+        <a href="https://drive.google.com/file/d/1XMC2WAP8UGx5SGJ3T6_vo3bs3TAGMsw-/view?usp=drivesdk" class="cv-link">Download My CV</a>
+    </section>
+
+    <section id="projects" class="section">
+        <h2>Projects</h2>
+        <div class="projects-grid">
+            <div class="card">
+                <h3>Solar Panel Cleaning Bot</h3>
+                <p>Developed an autonomous robot for cleaning solar panels, submitted to Smart India Hackathon. It uses motors and microcontrollers to clean panels without manual intervention.</p>
+                <a href="https://drive.google.com/file/d/1kPrSVh4hnqPDywCHhTaBnxtTluOVAuvV/view?usp=drivesdk">View Project</a>
+            </div>
+            <div class="card">
+                <h3>Helmet Detection System using YOLO</h3>
+                <p>Designed a smart surveillance system using YOLO and Python to detect helmet violations in traffic zones.</p>
+                <a href="https://drive.google.com/file/d/18J6p2xRaIYWt-E3p-bhRGqTIjmRNb4o9/view?usp=drivesdk">View Project</a>
+            </div>
+            <div class="card">
+                <h3>16x1 Multiplexer Design</h3>
+                <p>Designed and simulated a 16x1 multiplexer in Magic VLSI using Sky130A PDK and analyzed performance in NGSpice.</p>
+                <a href="https://drive.google.com/file/d/1kF5uD2Kex9XFhJCync6MtA1Oiwygs7BW/view?usp=drivesdk">View Project</a>
+            </div>
+            <div class="card">
+                <h3>Capacitor Design in Sky130</h3>
+                <p>Modeled a 1 fF capacitor in Magic VLSI and verified its functionality through waveform analysis using GAW.</p>
+                <a href="https://drive.google.com/file/d/1kF5uD2Kex9XFhJCync6MtA1Oiwygs7BW/view?usp=drivesdk">View Project</a>
+            </div>
+            <div class="card">
+                <h3>Smart Home Automation System</h3>
+                <p>Proposed a smart home idea powered by graphene solar panels and IoT, capable of automatically controlling lights, fans, and appliances based on human presence.</p>
+                <a href="https://docs.google.com/presentation/d/1kO0-NUD3DqOBlhMY-mQob1YWN4HDebUx/edit?usp=drivesdk&ouid=103333709708224000113&rtpof=true&sd=true">View Project</a>
+            </div>
+            <div class="card">
+                <h3>Smart Threat Cyber Links Detector</h3>
+                <p>Proposed an idea to detect and alert users about potential cybercrime links. The system identifies suspicious or malicious URLs shared via messages or emails, analyzes them using threat intelligence tools or databases, and warns users before they click.</p>
+                <a href="https://drive.google.com/file/d/1kRcuUYB5S-vTRK0I6ucFVw4gO2gyL4pU/view?usp=drivesdk">View Project</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="internships" class="section">
+        <h2>Internships</h2>
+        <div class="internships-grid">
+            <div class="card">
+                <h3>VLSI Design Intern – Teachnook</h3>
+                <p>Learned tools like Logisim, Multisim, Synopsys, and gained basic knowledge of digital circuit design and simulation.</p>
+            </div>
+            <div class="card">
+                <h3>Embedded Systems Intern – EduSkills & AICTE</h3>
+                <p>Worked with microcontrollers, sensors, and interfacing techniques. Built small real-time embedded applications.</p>
+            </div>
+            <div class="card">
+                <h3>Digital Marketing Intern – Brainwave Matrix Solutions</h3>
+                <p>Created and implemented digital marketing strategies. Promoted content via YouTube, Instagram, and LinkedIn. Achieved growth targets using SEO and influencer collaboration.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="certifications" class="section">
+        <h2>Certifications</h2>
+        <div class="certifications-grid">
+            <div class="card">
+                <h3>NPTEL IoT</h3>
+                <p>Elite + Silver Certificate</p>
+                <a href="https://drive.google.com/file/d/1kKq2UcgYH4DfvPXJRf6FclQyAuHLXNl-/view?usp=drivesdk">View Certificate</a>
+            </div>
+            <div class="card">
+                <h3>NPTEL Principles of Communications</h3>
+                <p>Elite + Gold Certificate</p>
+                <a href="https://drive.google.com/file/d/1kPgkvs0Qw6zw940PZyZAqm3iIyxWTkVI/view?usp=drivesdk">View Certificate</a>
+            </div>
+            <div class="card">
+                <h3>VLSI SoC Design Certification</h3>
+                <p>Specialized training in System-on-Chip design for VLSI.</p>
+                <a href="https://drive.google.com/file/d/1kQti8kH9TGaBNx7tPNitusbeEcVxY7OY/view?usp=drivesdk">View Certificate</a>
+            </div>
+            <div class="card">
+                <h3>Teachnook VLSI Internship Certificate</h3>
+                <p>Recognized for hands-on VLSI design internship.</p>
+                <a href="https://drive.google.com/file/d/1kNpT2Y3EThiCai_XdZTnZYB_Ycp3-271/view?usp=drivesdk">View Certificate</a>
+            </div>
+            <div class="card">
+                <h3>Embedded Systems from AICTE-EduSkills</h3>
+                <p>Certified in embedded systems development and applications.</p>
+                <a href="https://drive.google.com/file/d/1kNqflKFt9qa0Zlo8wGiZOhyOs5aVZJuR/view?usp=drivesdk">View Certificate</a>
+            </div>
+            <div class="card">
+                <h3>HAM Radio License</h3>
+                <p>Obtained from Vishnu Space Applications Center for amateur radio operations.</p>
+                <a href="[your-google-drive-ham-radio-link]">View Certificate</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="section">
+        <h2>Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="card">
+                <h3>Languages & Tools</h3>
+                <p>Verilog, C, HTML, CSS, JavaScript</p>
+            </div>
+            <div class="card">
+                <h3>VLSI Tools</h3>
+                <p>Magic VLSI, NGSpice, Synopsys, EDA Playground, Logisim, GAW</p>
+            </div>
+            <div class="card">
+                <h3>Embedded Systems</h3>
+                <p>Arduino, Microcontrollers, Sensors</p>
+            </div>
+            <div class="card">
+                <h3>Others</h3>
+                <p>Git, Canva, SEO, Digital Marketing Basics</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="achievements" class="section">
+        <h2>Achievements</h2>
+        <div class="achievements-grid">
+            <div class="card">
+                <h3>3rd Place at Valiant 2K23</h3>
+                <p>Secured 3rd place for a presentation on James Webb Space Telescope.</p>
+            </div>
+            <div class="card">
+                <h3>3rd Place in Failathon</h3>
+                <p>Mentored an app idea for students covering jobs, news, and motivation.</p>
+            </div>
+            <div class="card">
+                <h3>Pivot 2024 Participant</h3>
+                <p>Pitched an idea on carbon consumption silencers.</p>
+            </div>
+            <div class="card">
+                <h3>Event Participation</h3>
+                <p>Actively participated in Vishwatech 2.0, Engineers Day, and Research Day events.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section contact">
+    <h2>Contact</h2>
+    <p>📧 Email: <a href="mailto:myofficial5268@gmail.com">myofficial5268@gmail.com</a></p>
+    <p>📞 Phone: <a href="tel:+918093853830">+918093853830</a></p>
+    <p>🌐 Portfolio: <a href="[your-portfolio-link.com]">[your-portfolio-link.com]</a></p>
+    <p>🔗 LinkedIn: <a href="https://www.linkedin.com/in/paidipilli-purushotham-b468152ba">LinkedIn Profile</a></p>
+    <p>🎥 YouTube: <a href="https://youtube.com/@sci-tech-telugu">Sci Tech Telugu</a> & <a href="[your-gaming-channel-link]">Gaming Channel (42K+ subs)</a></p>
+</section>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.navbar a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Section transitions on scroll
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Dynamic card animation on scroll
+        const cards = document.querySelectorAll('.card');
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+        }, { threshold: 0.2 });
+
+        cards.forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px) scale(0.95)';
+            card.style.transition = 'opacity 0.5s, transform 0.5s';
+            cardObserver.observe(card);
+        });
+
+        // Welcome popup fade out
+        window.addEventListener('load', () => {
+            const popup = document.getElementById('welcomePopup');
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 3000); // Popup disappears after 3 seconds
+        });
+
+        // Dark/Light mode toggle
+        function toggleMode() {
+            const body = document.body;
+            const navbar = document.querySelector('.navbar');
+            const sections = document.querySelectorAll('.section');
+            const cards = document.querySelectorAll('.card');
+            const cvLinks = document.querySelectorAll('.cv-link');
+            const toggleButton = document.querySelector('.mode-toggle');
+
+            body.classList.toggle('light-mode');
+            navbar.classList.toggle('light-mode');
+            sections.forEach(section => section.classList.toggle('light-mode'));
+            cards.forEach(card => card.classList.toggle('light-mode'));
+            cvLinks.forEach(link => link.classList.toggle('light-mode'));
+
+            if (body.classList.contains('light-mode')) {
+                toggleButton.textContent = 'Dark Mode';
+            } else {
+                toggleButton.textContent = 'Light Mode';
+            }
+        }
+    </script>
+</body>
+</html>
